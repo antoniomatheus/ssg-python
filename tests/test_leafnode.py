@@ -1,0 +1,14 @@
+import unittest
+from src.leafnode import LeafNode
+
+
+class TestLeafNode(unittest.TestCase):
+    def test_without_attributes(self):
+        node = LeafNode("p", "Hello World!")
+        self.assertEqual(node.to_html(), "<p>Hello World!</p>")
+
+    def test_with_attributes(self):
+        node = LeafNode("a", "Click me!", {"href": "https://www.example.com"})
+        self.assertEqual(
+            node.to_html(), '<a href="https://www.example.com">Click me!</a>'
+        )
