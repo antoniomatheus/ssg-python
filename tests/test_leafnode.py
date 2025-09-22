@@ -12,3 +12,9 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual(
             node.to_html(), '<a href="https://www.example.com">Click me!</a>'
         )
+
+    def test_without_a_value(self):
+        node = LeafNode("p", None)
+        with self.assertRaises(ValueError) as err:
+            node.to_html()
+        self.assertEqual(str(err.exception), "All leaf nodes must have a value.")
