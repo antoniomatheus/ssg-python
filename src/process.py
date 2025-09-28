@@ -35,7 +35,7 @@ def split_textnodes_image(old_nodes):
                 text = text_splits[i // 2]
                 if not text:
                     continue
-                new_nodes.append(TextNode(text, node.text_type))
+                new_nodes.append(TextNode(text, node.text_type, node.url))
             else:
                 new_nodes.append(TextNode(images[i // 2][0], TextType.IMAGE, images[i // 2][1]))
     
@@ -52,8 +52,16 @@ def split_textnodes_link(old_nodes):
                 text = text_splits[i // 2]
                 if not text:
                     continue
-                new_nodes.append(TextNode(text, node.text_type))
+                new_nodes.append(TextNode(text, node.text_type, node.url))
             else:
                 new_nodes.append(TextNode(links[i // 2][0], TextType.LINK, links[i // 2][1]))
     
     return new_nodes
+
+def text_to_textnodes(text):
+    italicized = split_textnodes_delimiter([TextNode(text, TextType.PLAIN)], "_", TextType.ITALIC)
+    bolder = split_textnodes_delimiter(italicized, "**", TextType.BOLD)
+    code = split_textnodes_delimiter(bolder, "`", TextType.CODE)
+    images = split_textnodes_image(code)
+    links = split_textnodes_link(images)
+    return links
