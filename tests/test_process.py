@@ -44,6 +44,31 @@ class TestSplitTextNodes(unittest.TestCase):
         ]
         self.assertEqual(new_nodes, expected_output)
 
+    def test_split_image(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.PLAIN,
+        )
+        expected_output = [
+            TextNode("This is text with an ", TextType.PLAIN),
+            TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            TextNode(" and another ", TextType.PLAIN),
+            TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"),
+        ]
+        self.assertListEqual(split_textnodes_image([node]), expected_output)
+
+    def test_split_link(self):
+        node = TextNode(
+            "This is text with an [first link](https://i.imgur.com/zjjcJKZ.png) and another [second link](https://i.imgur.com/3elNhQu.png)",
+            TextType.PLAIN,
+        )
+        expected_output = [
+            TextNode("This is text with an ", TextType.PLAIN),
+            TextNode("first link", TextType.LINK, "https://i.imgur.com/zjjcJKZ.png"),
+            TextNode(" and another ", TextType.PLAIN),
+            TextNode("second link", TextType.LINK, "https://i.imgur.com/3elNhQu.png"),
+        ]
+        self.assertListEqual(split_textnodes_link([node]), expected_output)
 
 class TestMarkdownExtraction(unittest.TestCase):
     def test_extract_markdown_image(self):
