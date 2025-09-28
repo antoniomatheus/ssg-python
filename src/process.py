@@ -65,3 +65,6 @@ def text_to_textnodes(text):
     images = split_textnodes_image(code)
     links = split_textnodes_link(images)
     return links
+
+def markdown_to_blocks(markdown):
+    return list(filter(lambda x: len(x) > 0, map(lambda x: x.strip(), markdown.split("\n\n"))))
