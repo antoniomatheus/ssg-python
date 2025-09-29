@@ -102,7 +102,7 @@ def create_code(markdown):
 
 
 def create_quote(markdown):
-    return ParentNode("blockquote", text_to_textnodes(markdown.lstrip(">")))
+    return ParentNode("blockquote", text_to_textnodes(re.sub(r"\B>\s?\B", "", markdown)))
 
 
 def create_unordered_list(markdown):
