@@ -13,7 +13,7 @@ HEADING_PATTERN = r"^#{1,6} .+"
 CODE_PATTERN = r"^`{3}[\s\S]+`{3}$"
 QUOTE_PATTERN = r"^>.+"
 UNORDERED_LIST_PATTERN = r"^- .+"
-ORDERED_LIST_PATTERN = r"^\d\. .+"
+ORDERED_LIST_PATTERN = r"^\d+\. .+"
 
 def block_to_block_type(block):
     if re.match(HEADING_PATTERN, block):

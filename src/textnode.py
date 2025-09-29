@@ -1,4 +1,5 @@
 from enum import Enum
+from src.leafnode import LeafNode
 
 
 class TextType(Enum):
@@ -10,11 +11,29 @@ class TextType(Enum):
     IMAGE = "image"
 
 
-class TextNode:
+class TextNode(LeafNode):
     def __init__(self, text, text_type, url=None):
         self.text = text
         self.text_type = text_type
         self.url = url
+        tag, props = self._text_type_to_html_tag(text_type, url)
+        super().__init__(text, tag, props)
+
+    def _text_type_to_html_tag(self, text_type, url):
+        match text_type:
+            case TextType.PLAIN:
+                return (None, None)
+            case TextType.BOLD:
+                return ("b", None)
+            case TextType.ITALIC:
+                return ("i", None)
+            case TextType.CODE:
+                return ("code", None)
+            case TextType.LINK:
+                return ("a", { "href": url })
+            case TextType.IMAGE:
+                return ("img", { "src": url })
+
 
     def __eq__(self, value):
         return (
