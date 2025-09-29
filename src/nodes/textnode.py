@@ -1,5 +1,5 @@
 from enum import Enum
-from src.leafnode import LeafNode
+from src.nodes.leafnode import LeafNode
 
 
 class TextType(Enum):

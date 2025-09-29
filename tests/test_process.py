@@ -1,6 +1,6 @@
 import unittest
 from src.process import *
-from src.textnode import *
+from src.nodes.textnode import *
 
 
 class TestProcess(unittest.TestCase):
@@ -71,6 +71,14 @@ the **same** even with inline stuff
             html,
             "<body><pre><code>This is text that _should_ remain<br>the **same** even with inline stuff</code></pre></body>",
         )
+
+    def test_extract_title(self):
+        title = extract_title("# Title")
+        self.assertEqual("Title", title)
+
+        title = extract_title("Some text here\n\n# Title 2")
+        self.assertEqual("Title 2", title)
+
 
 
 class TestSplitTextNodes(unittest.TestCase):

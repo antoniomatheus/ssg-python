@@ -1,7 +1,7 @@
 import re
-from src.textnode import TextNode, TextType
-from src.parentnode import ParentNode
-from src.blocktype import block_to_block_type, BlockType
+from .nodes.textnode import TextNode, TextType
+from .nodes.parentnode import ParentNode
+from .blocktype import block_to_block_type, BlockType
 
 MARKDOWN_IMAGE_PATTERN = r"!\[(.*?)\]\((.*?)\)"
 MARKDOWN_LINK_PATTERN = r"\[(.*?)\]\((.*?)\)"
@@ -96,7 +96,9 @@ def create_heading(markdown):
 
 
 def create_code(markdown):
-    return ParentNode("pre", [TextNode(re.sub(r"(<br>)?```(<br>)?", "", markdown), TextType.CODE)])
+    return ParentNode(
+        "pre", [TextNode(re.sub(r"(<br>)?```(<br>)?", "", markdown), TextType.CODE)]
+    )
 
 
 def create_quote(markdown):
@@ -141,5 +143,36 @@ def markdown_to_html_node(markdown):
     html_output = ParentNode("body", body_items)
     return html_output
 
+
 def replace_newline_with_br_tag(text):
     return text.replace("\n", "<br>")
+
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block.startswith("# "):
+            return block.lstrip("# ")
+
+    raise ValueError("No title provided.")
+
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+    template = None
+    with open(template_path, "r", encoding="utf_8") as f:
+        template = f.read()
+
+    markdown_txt = None
+    with open(from_path, "r", encoding="utf_8") as f:
+        markdown_txt = f.read()
+
+    title = extract_title(markdown_txt)
+    generated_html = markdown_to_html_node(markdown_txt).to_html()
+
+    template = template.replace(r"{{ Title }}", title)
+    template = template.replace(r"{{ Content }}", generated_html)
+    
+    with open(dest_path, "w", encoding="utf_") as f:
+        f.write(template)
