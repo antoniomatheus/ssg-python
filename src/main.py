@@ -1,6 +1,6 @@
 import os
 import shutil
-from src.process import generate_page
+from src.process import generate_pages_recursively
 
 STATIC_DIR = "static"
 PUBLIC_DIR = "public"
@@ -19,17 +19,17 @@ def main():
 
     shutil.copytree(static_path, public_path)
 
-    markdown_path = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "content/index.md")
+    content_path = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "content")
     )
     template_path = os.path.normpath(
         os.path.join(os.path.dirname(__file__), "..", "assets/template.html")
     )
-    output_path = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "public/index.html")
+    output_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "public")
     )
 
-    generate_page(markdown_path, template_path, output_path)
+    generate_pages_recursively(content_path, template_path, output_dir)
 
 
 main()

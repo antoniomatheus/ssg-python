@@ -1,4 +1,5 @@
 import re
+import os
 from .nodes.textnode import TextNode, TextType
 from .nodes.parentnode import ParentNode
 from .blocktype import block_to_block_type, BlockType
@@ -174,5 +175,13 @@ def generate_page(from_path, template_path, dest_path):
     template = template.replace(r"{{ Title }}", title)
     template = template.replace(r"{{ Content }}", generated_html)
     
-    with open(dest_path, "w", encoding="utf_") as f:
+    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    with open(dest_path, "w", encoding="utf_8") as f:
         f.write(template)
+
+def generate_pages_recursively(dir_path_content, template_path, dest_dir_path):
+    for (root, dirs, files) in os.walk(dir_path_content, topdown=True):
+        for file in files:
+            content_path = os.path.join(root, file)
+            output_path = os.path.join(root.replace(dir_path_content, dest_dir_path), file.replace("md", "html"))
+            generate_page(content_path, template_path, output_path)
